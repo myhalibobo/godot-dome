@@ -1,0 +1,50 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://tt.png" type="Texture" id=1]
+[ext_resource path="res://unknown.png" type="Texture" id=2]
+
+[sub_resource type="Shader" id=1]
+
+code = "shader_type canvas_item;
+
+uniform int samples = 30;
+uniform float lng = 0.005;
+uniform vec2 center = vec2(0.5,0.5);
+
+void fragment() {
+    int i = 0;
+    vec4 color = texture( SCREEN_TEXTURE, SCREEN_UV );
+    for(i=1; i<samples; i++)
+    {
+        float d = lng * float(i);
+        vec2 px = SCREEN_UV * ( 1.0 - d ) + center * d;
+        color += texture( SCREEN_TEXTURE, px);
+    }
+    
+    COLOR = vec4((color / float(samples+1)).rgb, 1.0);
+}"
+
+[sub_resource type="ShaderMaterial" id=2]
+
+render_priority = 0
+shader = SubResource( 1 )
+shader_param/samples = null
+shader_param/lng = null
+shader_param/center = null
+_sections_unfolded = [ "shader", "shader_param" ]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="sprite" type="Sprite" parent="."]
+position = Vector2( 474.338, 357.635 )
+scale = Vector2( 1.26632, 1.31865 )
+texture = ExtResource( 1 )
+_sections_unfolded = [ "Material", "Visibility", "texture" ]
+
+[node name="shader" type="Sprite" parent="."]
+material = SubResource( 2 )
+position = Vector2( 520.121, 304.808 )
+scale = Vector2( 1.28284, 1.304 )
+texture = ExtResource( 2 )
+_sections_unfolded = [ "Material", "material" ]
+
